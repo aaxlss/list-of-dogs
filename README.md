@@ -17,5 +17,5 @@ and finally you should run the next command in order to start the server. The se
 
 
 ```sh
-npm install
+npm start
 ```
