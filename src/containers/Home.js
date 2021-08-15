@@ -1,14 +1,10 @@
 import { Button, Grid } from '@material-ui/core';
 import React from 'react';
-import { withStyles } from '@material-ui/styles';
 import DogItem from '../components/dogItem';
 import ImageList from '@material-ui/core/ImageList';
+import { connect } from 'react-redux';
 
-const styles = theme => ({
-    root: {
-        flexGrow: 1,
-      },
-  });
+
 
 class Home extends React.Component {
     constructor(props) {
@@ -17,10 +13,10 @@ class Home extends React.Component {
       this.state = {
         error: null,
         isLoaded: false,
-        dogs: []
+        dogs: [],
+        favorites: [],
       };
     }
-
 
     getDogs () {
         this.setState({
@@ -31,33 +27,40 @@ class Home extends React.Component {
             fetch('https://random.dog/woof.json')
             .then(response => response.json())
             .then(data => {
-                if(!data.url.includes('.mp4')){
+               
                     this.setState({
                         dogs: [...this.state.dogs, data]
-                    })
-                }
-                
+                    });
+                     
             });
-            count ++
-        } while (count <=6);
+            count++
+        } while (count < 6);
      
     }
 
    
     render(){
-        
         return (
-            <>
-                <Button onClick={() => this.getDogs()}>Get 6 dogs</Button>
-                <ImageList>
+            <div style={{flexGrow: 1}}>
+                <Grid container >
+                    <Grid item xs={12}>
+                        <Button onClick={() => this.getDogs()}>Get 6 dogs</Button>
+                    </Grid>
                     {this.state.dogs.map((dog, index) => (
-                        
-                        <DogItem src={dog.url} title={`dog-${index + 1}`}/>
+                        <Grid item xs={12} sm={2}>
+                            <DogItem src={dog.url}/>
+                        </Grid>
                     ))}
-                </ImageList>
-            </>
+                </Grid>
+            </div>
         )
     }
 }
 
-export default Home
+const mapStateTopProps = state => {
+    return {
+        favorites: state.favorites
+    }
+}
+
+export default connect( mapStateTopProps, null)(Home)
